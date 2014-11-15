@@ -32,23 +32,26 @@ public class UnitTestResultsAggregator implements BatchExtension {
   private final Settings settings;
   private final VisualStudioTestResultsFileParser visualStudioTestResultsFileParser;
   private final NUnitTestResultsFileParser nunitTestResultsFileParser;
+  private final XUnitTestResultsFileParser xunitTestResultsFileParser;
 
   public UnitTestResultsAggregator(UnitTestConfiguration unitTestConf, Settings settings) {
-    this(unitTestConf, settings, new VisualStudioTestResultsFileParser(), new NUnitTestResultsFileParser());
+    this(unitTestConf, settings, new VisualStudioTestResultsFileParser(), new NUnitTestResultsFileParser(), new XUnitTestResultsFileParser());
   }
 
   @VisibleForTesting
   public UnitTestResultsAggregator(UnitTestConfiguration unitTestConf, Settings settings,
     VisualStudioTestResultsFileParser visualStudioTestResultsFileParser,
-    NUnitTestResultsFileParser nunitTestResultsFileParser) {
+    NUnitTestResultsFileParser nunitTestResultsFileParser,
+    XUnitTestResultsFileParser xunitTestResultsFileParser) {
     this.unitTestConf = unitTestConf;
     this.settings = settings;
     this.visualStudioTestResultsFileParser = visualStudioTestResultsFileParser;
     this.nunitTestResultsFileParser = nunitTestResultsFileParser;
+    this.xunitTestResultsFileParser = xunitTestResultsFileParser;
   }
 
   public boolean hasUnitTestResultsProperty() {
-    return hasVisualStudioTestResultsFile() || hasNUnitTestResultsFile();
+    return hasVisualStudioTestResultsFile() || hasNUnitTestResultsFile() || hasXUnitTestResultsFile();
   }
 
   private boolean hasVisualStudioTestResultsFile() {
@@ -57,6 +60,10 @@ public class UnitTestResultsAggregator implements BatchExtension {
 
   private boolean hasNUnitTestResultsFile() {
     return settings.hasKey(unitTestConf.nunitTestResultsFilePropertyKey());
+  }
+  
+  private boolean hasXUnitTestResultsFile() {
+    return settings.hasKey(unitTestConf.xunitTestResultsFilePropertyKey());
   }
 
   public UnitTestResults aggregate(WildcardPatternFileProvider wildcardPatternFileProvider, UnitTestResults unitTestResults) {
@@ -68,6 +75,9 @@ public class UnitTestResultsAggregator implements BatchExtension {
       aggregate(wildcardPatternFileProvider, settings.getString(unitTestConf.nunitTestResultsFilePropertyKey()), nunitTestResultsFileParser, unitTestResults);
     }
 
+    if (hasXUnitTestResultsFile()) {
+      aggregate(wildcardPatternFileProvider, settings.getString(unitTestConf.xunitTestResultsFilePropertyKey()), xunitTestResultsFileParser, unitTestResults);
+    }
     return unitTestResults;
   }
 
