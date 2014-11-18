@@ -39,8 +39,8 @@ public class XUnitTestResultsFileParser implements UnitTestResultsParser {
     private final File file;
     private XmlParserHelper xmlParserHelper;
     private final UnitTestResults unitTestResults;
-	
-	private boolean isSecondVersion = false;
+
+    private boolean isSecondVersion = false;
 
     public Parser(File file, UnitTestResults unitTestResults) {
       this.file = file;
@@ -60,12 +60,12 @@ public class XUnitTestResultsFileParser implements UnitTestResultsParser {
     }
 
     private void checkRootTag() {
-	  String rootTag = xmlParserHelper.nextTag();
-	  
-	  if ("assemblies".equals(rootTag)) {
-		isSecondVersion = true;
-	    rootTag = xmlParserHelper.nextTag();
-	  }
+      String rootTag = xmlParserHelper.nextTag();
+    
+      if ("assemblies".equals(rootTag)) {
+        isSecondVersion = true;
+        rootTag = xmlParserHelper.nextTag();
+      }
 
       if (!"assembly".equals(rootTag)) {
         throw xmlParserHelper.parseError("Missing needed element <assembly>");
@@ -77,11 +77,11 @@ public class XUnitTestResultsFileParser implements UnitTestResultsParser {
       int skipped = xmlParserHelper.getRequiredIntAttribute("skipped");
       int passed = xmlParserHelper.getRequiredIntAttribute("passed");
       int failures = xmlParserHelper.getRequiredIntAttribute("failed");
-	  int errors = 0;
-	  
-	  if (isSecondVersion) {
-		errors = xmlParserHelper.getRequiredIntAttribute("errors");
-	  }	  
+      int errors = 0;
+      
+      if (isSecondVersion) {
+        errors = xmlParserHelper.getRequiredIntAttribute("errors");
+      }
 
       unitTestResults.add(tests, passed, skipped, failures, errors);
     }
