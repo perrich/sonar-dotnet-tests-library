@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<assembly name="c:\git\sonar-xunit\Sonar.NUnit\bin\Debug\Sonar.NUnit.dll" run-date="2014-08-15" run-time="09:02:13" time="0.603" total="200" passed="160" skipped="10" failed="30" environment="32-bit .NET 4.0.30319.34209" test-framework="xUnit.net 1.9.2.1705">
+  <class />
+</assembly>
